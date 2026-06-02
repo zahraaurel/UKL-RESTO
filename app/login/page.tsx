@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 
 // Menggunakan jalur proxy lokal yang sudah dikonfigurasi di next.config.mjs sebelumnya
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 export default function LoginPage(): React.JSX.Element {
   const router = useRouter();

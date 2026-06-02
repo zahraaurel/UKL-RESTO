@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 // Jalur proxy lokal agar aman dari CORS browser
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 export default function Menu() {
   const [activeTab, setActiveTab] = useState('appetizer');

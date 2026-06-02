@@ -6,7 +6,7 @@ import Link from 'next/link';
 import toast, { Toaster } from 'react-hot-toast';
 
 // Menggunakan proxy lokal /api-railway untuk menghindari blokir CORS browser
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 // --- DEFINISI INTERFACE SESUAI DATA REAL POSTMAN ---
 interface CategoryBackend {

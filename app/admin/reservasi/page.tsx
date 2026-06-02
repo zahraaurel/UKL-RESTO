@@ -5,7 +5,7 @@ import Link from 'next/link';
 // Import library react-hot-toast secara valid
 import toast, { Toaster } from 'react-hot-toast';
 
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 interface BackendReservation {
   id: number;

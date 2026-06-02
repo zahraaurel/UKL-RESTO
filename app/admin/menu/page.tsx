@@ -29,7 +29,7 @@ const CATEGORY_MAP: Record<string, number> = {
   'Drinks': 6
 };
 
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 export default function MenuCrudPage(): React.JSX.Element {
   const [menuList, setMenuList] = useState<MenuItem[]>([]);

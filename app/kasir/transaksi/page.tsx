@@ -6,7 +6,7 @@ import Navbar from '@/components/NavbarKasir';
 import toast, { Toaster } from 'react-hot-toast';
 
 // Jalur jembatan proxy lokal agar aman dari blokir CORS browser
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 // Interface disesuaikan dengan struktur objek Menu asli dari Database/Postman Anda
 interface BackendMenuItem {

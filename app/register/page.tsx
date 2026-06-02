@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 
 // Ganti URL langsung Railway menjadi rute proxy lokal
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 export default function RegisterPage(): React.JSX.Element {
   const router = useRouter();

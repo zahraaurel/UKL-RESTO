@@ -6,7 +6,7 @@ import Link from 'next/link'; // Menggunakan fitur navigasi internal khas Next.j
 import toast, { Toaster } from 'react-hot-toast';
 
 // Base URL Proxy untuk mengantisipasi error CORS di browser dan menyambung ke server backend (Railway)
-const API_BASE_URL = '/api-railway';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 // --- INTERFACE TYPESCRIPT ---
 // Mendefinisikan struktur objek data reservasi yang datang dari backend secara ketat
