@@ -18,6 +18,7 @@ interface MenuItem {
   stock: number;
   categoryId: number;
   category: Category;
+  image?: string; // Menambahkan tipe data opsional untuk menyimpan URL gambar hidangan dari server
 }
 
 // Pemetaan Nama Dropdown ke ID Kategori backend Anda
@@ -42,6 +43,7 @@ export default function MenuCrudPage(): React.JSX.Element {
   const [formStock, setFormStock] = useState<number>(0);
   const [formCategory, setFormCategory] = useState<string>('Main');
   const [formDescription, setFormDescription] = useState<string>('');
+  const [formImage, setFormImage] = useState<string>(''); // State baru untuk melacak ketikan URL gambar pada formulir
 
   const getAuthToken = () => {
     if (typeof window !== 'undefined') {
@@ -50,19 +52,15 @@ export default function MenuCrudPage(): React.JSX.Element {
     return '';
   };
 
-  /**
-   * ==========================================
-   * 1. READ (GET ALL MENU)
-   * ==========================================
-   */
+  /** READ (GET ALL MENU)**/
   const fetchMenu = async () => {
     try {
       setLoading(true);
       const res = await fetch(`${API_BASE_URL}/menu`);
       if (!res.ok) throw new Error('Gagal memuat daftar menu dari server');
-      
+
       const result = await res.json();
-      
+
       if (result && Array.isArray(result.data)) {
         setMenuList(result.data);
       } else if (Array.isArray(result)) {
@@ -82,11 +80,7 @@ export default function MenuCrudPage(): React.JSX.Element {
     fetchMenu();
   }, []);
 
-  /**
-   * ==========================================
-   * 2. CREATE & UPDATE (POST / PUT MENU) - FIXED Toast & Payload!
-   * ==========================================
-   */
+  /** 2. CREATE & UPDATE (POST / PUT MENU)**/
   const handleSaveMenu = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim() || formPrice <= 0 || formStock < 0) {
@@ -97,16 +91,16 @@ export default function MenuCrudPage(): React.JSX.Element {
     const token = getAuthToken();
     const targetCategoryId = CATEGORY_MAP[formCategory] || 4;
 
-    // Mutlak mengonversi ke tipe data primitives number untuk mencegah error JSON parser di backend
+    // Menyatukan seluruh data form ke dalam payload JSON termasuk field link gambar
     const payload = {
       name: formName.trim(),
       description: formDescription.trim(),
       price: Number(formPrice),
       stock: Number(formStock),
-      categoryId: Number(targetCategoryId)
+      categoryId: Number(targetCategoryId),
+      image: formImage.trim() // Melampirkan link gambar ke backend (bisa dikirim string kosong jika tidak ada)
     };
 
-    // Menampilkan toast loading secara berkala selama siklus HTTP Request berjalan
     const loadingToast = toast.loading(isEditing ? 'Memperbarui data menu...' : 'Menyimpan menu baru ke server...');
 
     try {
@@ -123,11 +117,10 @@ export default function MenuCrudPage(): React.JSX.Element {
         const resData = await res.json();
 
         if (!res.ok) {
-          // Robust checking error message backend baik string maupun array string
           const systemErrorMessage = Array.isArray(resData.message) ? resData.message[0] : resData.message;
           throw new Error(systemErrorMessage || 'Gagal memperbarui hidangan.');
         }
-        
+
         toast.success('Menu berhasil diperbarui!', { id: loadingToast });
       } else {
         const res = await fetch(`${API_BASE_URL}/menu`, {
@@ -150,18 +143,13 @@ export default function MenuCrudPage(): React.JSX.Element {
       }
 
       resetForm();
-      fetchMenu(); 
+      fetchMenu();
     } catch (error: any) {
-      // Mengubah status loading toast menjadi error toast secara realtime
       toast.error(error.message, { id: loadingToast });
     }
   };
 
-  /**
-   * ==========================================
-   * 3. DELETE (DELETE MENU BY ID)
-   * ==========================================
-   */
+  /**3. DELETE (DELETE MENU BY ID)**/
   const deleteMenu = async (id: number) => {
     if (!confirm("Hapus hidangan ini secara permanen dari sistem?")) return;
 
@@ -178,7 +166,7 @@ export default function MenuCrudPage(): React.JSX.Element {
       if (!res.ok) throw new Error('Gagal menghapus menu. Verifikasi token admin kadaluwarsa.');
 
       toast.success('Menu berhasil dihapus!', { id: deleteToast });
-      fetchMenu(); 
+      fetchMenu();
     } catch (error: any) {
       toast.error(error.message, { id: deleteToast });
     }
@@ -191,7 +179,8 @@ export default function MenuCrudPage(): React.JSX.Element {
     setFormPrice(item.price);
     setFormStock(item.stock);
     setFormDescription(item.description || '');
-    
+    setFormImage(item.image || ''); // Memasukkan URL gambar lama ke kolom input saat tombol edit ditekan
+
     const activeCatId = item.categoryId || item.category?.id;
     const catName = Object.keys(CATEGORY_MAP).find(key => CATEGORY_MAP[key] === activeCatId);
     if (catName) setFormCategory(catName);
@@ -205,12 +194,12 @@ export default function MenuCrudPage(): React.JSX.Element {
     setFormStock(0);
     setFormDescription('');
     setFormCategory('Main');
+    setFormImage(''); // Mengosongkan kembali data kolom gambar
   };
 
   return (
     <main className="bg-[#090705] min-h-screen text-[#f3f1ed] antialiased pb-24">
-      {/* 2. Meletakkan Provider Toaster dengan kustomisasi Luxury UI Theme */}
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           style: {
@@ -227,7 +216,7 @@ export default function MenuCrudPage(): React.JSX.Element {
           },
         }}
       />
-      
+
       <Navbar />
 
       <div className="px-6 md:px-16 pt-32 pb-10">
@@ -248,7 +237,7 @@ export default function MenuCrudPage(): React.JSX.Element {
       </div>
 
       <div className="px-6 md:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        
+
         {/* PANEL FORM DATA */}
         <div className="lg:col-span-4 bg-[#120f0b] border border-white/[0.03] p-8 space-y-6">
           <h2 className="font-serif text-lg text-brand-gold font-light">{isEditing ? "Edit Detail Menu" : "Tambah Menu Baru"}</h2>
@@ -261,12 +250,24 @@ export default function MenuCrudPage(): React.JSX.Element {
 
             <div className="space-y-1">
               <label className="block text-[9px] tracking-widest text-brand-goldDim uppercase">Deskripsi</label>
-              <textarea 
-                value={formDescription} 
-                onChange={(e) => setFormDescription(e.target.value)} 
-                rows={3} 
-                className="w-full bg-black/20 border border-white/[0.05] text-xs px-4 py-3 text-[#f3f1ed] outline-none focus:border-brand-gold resize-none placeholder:opacity-30 custom-scrollbar" 
+              <textarea
+                value={formDescription}
+                onChange={(e) => setFormDescription(e.target.value)}
+                rows={3}
+                className="w-full bg-black/20 border border-white/[0.05] text-xs px-4 py-3 text-[#f3f1ed] outline-none focus:border-brand-gold resize-none placeholder:opacity-30 custom-scrollbar"
                 placeholder="Detail komposisi hidangan..."
+              />
+            </div>
+
+            {/* BARU: Input Link URL Gambar Menu */}
+            <div className="space-y-1">
+              <label className="block text-[9px] tracking-widest text-brand-goldDim uppercase">URL Gambar Hidangan</label>
+              <input
+                type="url"
+                value={formImage}
+                onChange={(e) => setFormImage(e.target.value)}
+                className="w-full bg-black/20 border border-white/[0.05] text-xs px-4 py-3 text-[#f3f1ed] outline-none focus:border-brand-gold placeholder:opacity-30"
+                placeholder="https://pinterest.com/image-path.jpg"
               />
             </div>
 
@@ -315,6 +316,8 @@ export default function MenuCrudPage(): React.JSX.Element {
               <table className="w-full text-left border-collapse text-xs font-light">
                 <thead>
                   <tr className="border-b border-white/[0.05] bg-[#120f0b]/60 text-brand-goldDim text-[10px] tracking-wider uppercase">
+                    {/* BARU: Kolom header visual mini gambar */}
+                    <th className="p-4 font-medium w-16">Gambar</th>
                     <th className="p-4 font-medium">Nama Menu</th>
                     <th className="p-4 font-medium">Kategori</th>
                     <th className="p-4 font-medium">Stok</th>
@@ -325,17 +328,42 @@ export default function MenuCrudPage(): React.JSX.Element {
                 <tbody className="divide-y divide-white/[0.02]">
                   {menuList.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-gray-500 italic">
+                      <td colSpan={6} className="p-8 text-center text-gray-500 italic">
                         Tidak ada data menu yang tersimpan di server.
                       </td>
                     </tr>
                   ) : (
                     menuList.map((item) => (
                       <tr key={item.id} className="hover:bg-white/[0.01] transition">
+
+                        {/* BARU: Merender Kotak Gambar Thumbnail Mini Menu (Sudah Fix Super Gelap) */}
+                        <td className="p-4 vertical-middle">
+                          {/* 1. Ditambahkan class 'group' agar efek hover anak komponennya aktif */}
+                          <div className="w-12 h-12 bg-black/40 border border-white/10 overflow-hidden relative flex items-center justify-center group">
+                            {item.image ? (
+                              <>
+                                {/* 2. Ditambahkan tanda seru (!) pada !brightness-50 untuk memaksa gambar meredup */}
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover !brightness-50 group-hover:!brightness-90 transition duration-500"
+                                  onError={(e) => {
+                                    e.currentTarget.src = 'https://placehold.co/100x100/120f0b/f3f1ed?text=No+Img';
+                                  }}
+                                />
+                                {/* 3. Ditambahkan lapisan bayangan hitam absolut di atas gambar sebagai pengunci kegelapan */}
+                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition duration-500 pointer-events-none" />
+                              </>
+                            ) : (
+                              <span className="text-[8px] uppercase opacity-30 text-center tracking-tighter">No Pic</span>
+                            )}
+                          </div>
+                        </td>
+
                         <td className="p-4 font-serif text-sm tracking-wide text-[#f3f1ed]">
                           <div>{item.name}</div>
                           {item.description && (
-                            <div className="text-[11px] text-gray-500 font-sans mt-0.5 normal-case max-w-sm truncate">
+                            <div className="text-[11px] text-gray-500 font-sans mt-0.5 normal-case max-w-xs truncate">
                               {item.description}
                             </div>
                           )}
