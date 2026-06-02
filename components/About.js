@@ -44,7 +44,7 @@ export default function About() {
         {/* Kolom Gambar */}
         <div className="lg:col-span-5 flex justify-center items-center h-80 lg:h-[450px] border border-white/5 bg-[#12110E]/40 relative overflow-hidden rounded-3xl">
           <img
-            src="vong-kitchen.webp"
+            src="https://decode.uai.ac.id/wp-content/uploads/2022/03/restaurant.jpg-1500x1000.webp"
             alt="Suasana restoran"
             className="object-cover w-full h-full"
           />
