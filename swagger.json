@@ -1,0 +1,412 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "UKL Restoran API",
+    "version": "1.0.0",
+    "description": "Dokumentasi API untuk aplikasi REST API UKL Restoran"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    },
+    {
+      "url": "https://ukl-restoran-production.up.railway.app",
+      "description": "Production server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["AUTH"],
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "admin@restoran.com" },
+                  "password": { "type": "string", "example": "password123" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["AUTH"],
+        "summary": "Register new staff (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string", "example": "kasir1" },
+                  "email": { "type": "string", "example": "kasir1@restoran.com" },
+                  "password": { "type": "string", "example": "password123" },
+                  "role": { "type": "string", "example": "KASIR", "enum": ["ADMIN", "KASIR"] }
+                },
+                "required": ["username", "email", "password", "role"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      }
+    },
+    "/auth/kasir": {
+      "get": {
+        "tags": ["AUTH"],
+        "summary": "Get semua data kasir (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/auth/kasir/{id}": {
+      "delete": {
+        "tags": ["AUTH"],
+        "summary": "Delete kasir (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/category": {
+      "post": {
+        "tags": ["CATEGORY"],
+        "summary": "Create category (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Makanan" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      },
+      "get": {
+        "tags": ["CATEGORY"],
+        "summary": "Get all category (Public)",
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/category/{id}": {
+      "get": {
+        "tags": ["CATEGORY"],
+        "summary": "Get category by ID (Public)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "put": {
+        "tags": ["CATEGORY"],
+        "summary": "Update category (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Minuman" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["CATEGORY"],
+        "summary": "Delete category (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/menu": {
+      "post": {
+        "tags": ["MENU"],
+        "summary": "Create menu (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Nasi Goreng" },
+                  "description": { "type": "string", "example": "Nasi goreng spesial" },
+                  "price": { "type": "integer", "example": 25000 },
+                  "stock": { "type": "integer", "example": 50 },
+                  "categoryId": { "type": "integer", "example": 1 }
+                },
+                "required": ["name", "price", "stock", "categoryId"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      },
+      "get": {
+        "tags": ["MENU"],
+        "summary": "Get all menu (Public)",
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/menu/search": {
+      "get": {
+        "tags": ["MENU"],
+        "summary": "Search menu by name (Public)",
+        "parameters": [
+          { "name": "name", "in": "query", "required": true, "schema": { "type": "string" }, "example": "nasi" }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/menu/{id}": {
+      "get": {
+        "tags": ["MENU"],
+        "summary": "Get menu by ID (Public)",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "put": {
+        "tags": ["MENU"],
+        "summary": "Update menu (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "price": { "type": "integer", "example": 30000 },
+                  "stock": { "type": "integer", "example": 40 }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["MENU"],
+        "summary": "Delete menu (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/reservation": {
+      "post": {
+        "tags": ["RESERVATION"],
+        "summary": "Create reservasi (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customerName": { "type": "string", "example": "Budi Santoso" },
+                  "phoneNumber": { "type": "string", "example": "08123456789" },
+                  "reservationDate": { "type": "string", "format": "date-time", "example": "2026-06-01T19:00:00.000Z" },
+                  "totalGuest": { "type": "integer", "example": 4 },
+                  "tableNumber": { "type": "integer", "example": 5 }
+                },
+                "required": ["customerName", "phoneNumber", "reservationDate", "totalGuest", "tableNumber"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      },
+      "get": {
+        "tags": ["RESERVATION"],
+        "summary": "Get all reservasi (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/reservation/search": {
+      "get": {
+        "tags": ["RESERVATION"],
+        "summary": "Search reservasi by nama customer (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "name", "in": "query", "required": true, "schema": { "type": "string" }, "example": "budi" }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/reservation/by-date": {
+      "get": {
+        "tags": ["RESERVATION"],
+        "summary": "Search reservasi by tanggal (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "date", "in": "query", "required": true, "schema": { "type": "string" }, "example": "2026-06-01" }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/reservation/{id}": {
+      "get": {
+        "tags": ["RESERVATION"],
+        "summary": "Get reservasi by ID (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "put": {
+        "tags": ["RESERVATION"],
+        "summary": "Update status reservasi (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": { "type": "string", "example": "CONFIRMED" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Updated" } }
+      },
+      "delete": {
+        "tags": ["RESERVATION"],
+        "summary": "Delete reservasi (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/transaction": {
+      "post": {
+        "tags": ["TRANSACTION"],
+        "summary": "Create transaksi (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customerName": { "type": "string", "example": "Andi" },
+                  "paymentMethod": { "type": "string", "example": "CASH" },
+                  "details": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "menuId": { "type": "integer", "example": 1 },
+                        "quantity": { "type": "integer", "example": 2 }
+                      }
+                    }
+                  }
+                },
+                "required": ["customerName", "paymentMethod", "details"]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Created" } }
+      },
+      "get": {
+        "tags": ["TRANSACTION"],
+        "summary": "Get all transaksi (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/transaction/{id}": {
+      "get": {
+        "tags": ["TRANSACTION"],
+        "summary": "Get transaksi by ID (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "delete": {
+        "tags": ["TRANSACTION"],
+        "summary": "Delete transaksi (Admin Only)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Deleted" } }
+      }
+    },
+    "/transaction-detail/{id}": {
+      "get": {
+        "tags": ["TRANSACTION DETAIL"],
+        "summary": "Get detail transaksi by transaction ID (Kasir/Admin)",
+        "security": [{ "BearerAuth": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    }
+  }
+}
