@@ -139,7 +139,7 @@ export default function Menu() {
                         src={item.image}
                         alt={item.name}
                         // Menggunakan !brightness
-                        className="w-full h-full object-cover object-center !brightness-20 group-hover:scale-105 group-hover:!brightness-90 transition duration-500"
+                        className="w-full h-full object-cover object-center !brightness-70 group-hover:scale-105 group-hover:!brightness-90 transition duration-500"
                         onError={(e) => {
                           e.currentTarget.src = 'https://placehold.co/400x400/120f0b/f3f1ed?text=Maison+D%27or';
                         }}

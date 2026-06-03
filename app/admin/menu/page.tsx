@@ -346,7 +346,7 @@ export default function MenuCrudPage(): React.JSX.Element {
                                 <img
                                   src={item.image}
                                   alt={item.name}
-                                  className="w-full h-full object-cover !brightness-20 group-hover:!brightness-90 transition duration-500"
+                                  className="w-full h-full object-cover !brightness-70 group-hover:!brightness-90 transition duration-500"
                                   onError={(e) => {
                                     e.currentTarget.src = 'https://placehold.co/100x100/120f0b/f3f1ed?text=No+Img';
                                   }}
