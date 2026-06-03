@@ -145,7 +145,7 @@ export default function Menu() {
                         }}
                       />
                       {/* Lapisan bayangan malam overlay */}
-                      <div className="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition duration-500 pointer-events-none" />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500 pointer-events-none" />
                     </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-600 uppercase tracking-wider text-center p-2 italic">

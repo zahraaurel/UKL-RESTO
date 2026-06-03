@@ -352,7 +352,7 @@ export default function MenuCrudPage(): React.JSX.Element {
                                   }}
                                 />
                                 {/* 3. Ditambahkan lapisan bayangan hitam absolut di atas gambar sebagai pengunci kegelapan */}
-                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition duration-500 pointer-events-none" />
+                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500 pointer-events-none" />
                               </>
                             ) : (
                               <span className="text-[8px] uppercase opacity-30 text-center tracking-tighter">No Pic</span>
