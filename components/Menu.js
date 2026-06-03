@@ -133,13 +133,13 @@ export default function Menu() {
 
                 {/* --- TEMPAT GAMBAR HIDANGAN --- */}
                 <div className="w-24 h-24 md:w-28 md:h-28 shrink-0 overflow-hidden bg-white/[0.02] border border-white/10 relative flex items-center justify-center group">
-                  {item.image ? (
+                  {item.image ? ( 
                     <>
                       <img
                         src={item.image}
                         alt={item.name}
-                        // Menggunakan !brightness-50 agar gambar mentah yang terang langsung redup drastis
-                        className="w-full h-full object-cover object-center !brightness-50 group-hover:scale-105 group-hover:!brightness-90 transition duration-500"
+                        // Menggunakan !brightness
+                        className="w-full h-full object-cover object-center !brightness-20 group-hover:scale-105 group-hover:!brightness-90 transition duration-500"
                         onError={(e) => {
                           e.currentTarget.src = 'https://placehold.co/400x400/120f0b/f3f1ed?text=Maison+D%27or';
                         }}
