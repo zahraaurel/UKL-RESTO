@@ -35,10 +35,10 @@ export default function CashierDashboardPage(): React.JSX.Element {
             </Link>
 
             <Link
-              href="/kasir/transaksi"
+              href="/kasir/reservasi"
               className="border border-white/10 text-brand-muted hover:text-white hover:border-brand-goldDim font-medium text-xs tracking-widest uppercase px-6 py-4 transition duration-300 text-center"
             >
-              💳 Kelola Transaksi
+              💳 Kelola Reservasi
             </Link>
           </div>
         </div>
