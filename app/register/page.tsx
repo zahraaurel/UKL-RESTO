@@ -9,11 +9,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api-railway';
 
 export default function RegisterPage(): React.JSX.Element {
   const router = useRouter();
-  
+
   // State untuk menentukan peran (Role) yang sedang dipilih
   const [role, setRole] = useState<'kasir' | 'admin'>('kasir');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  
+
   // State untuk menangkap data dari form input
   const [formData, setFormData] = useState({
     username: '',
@@ -67,7 +67,7 @@ export default function RegisterPage(): React.JSX.Element {
 
       // Notifikasi Berhasil Berdasarkan Response API Postman
       toast.success(data.message || 'Akun Anda telah terdaftar berhasil!', { id: registerToastId });
-      
+
       // Alihkan ke halaman login setelah berhasil
       setTimeout(() => {
         router.push('/login');
@@ -83,7 +83,7 @@ export default function RegisterPage(): React.JSX.Element {
   return (
     <main className="bg-[#090705] text-[#f3f1ed] min-h-screen antialiased flex flex-col justify-center items-center px-6 py-12">
       {/* Provider Toaster Custom Luxury UI Theme */}
-      <Toaster 
+      <Toaster
         position="top-right"
         toastOptions={{
           style: {
@@ -102,7 +102,7 @@ export default function RegisterPage(): React.JSX.Element {
       />
 
       <div className="w-full max-w-md bg-[#120f0b] border border-white/[0.03] p-8 shadow-xl backdrop-blur-md animate-fadeIn">
-        
+
         {/* Header Form */}
         <div className="text-center space-y-2 mb-8">
           <div className="text-[10px] tracking-[0.3em] text-brand-gold font-medium uppercase">
@@ -121,20 +121,18 @@ export default function RegisterPage(): React.JSX.Element {
           <button
             type="button"
             onClick={() => { setRole('kasir'); setFormData(p => ({ ...p, secretKey: '' })); }}
-            className={`py-2.5 text-xs font-semibold tracking-wider uppercase transition cursor-pointer ${
-              role === 'kasir' ? 'bg-[#f3f1ed] text-[#090705] shadow' : 'opacity-60 hover:opacity-100'
-            }`}
+            className={`py-2.5 text-xs font-semibold tracking-wider uppercase transition cursor-pointer ${role === 'kasir' ? 'bg-[#f3f1ed] text-[#090705] shadow' : 'opacity-60 hover:opacity-100'
+              }`}
           >
-             Kasir
+            Kasir
           </button>
           <button
             type="button"
             onClick={() => setRole('admin')}
-            className={`py-2.5 text-xs font-semibold tracking-wider uppercase transition cursor-pointer ${
-              role === 'admin' ? 'bg-[#f3f1ed] text-[#090705] shadow' : 'opacity-60 hover:opacity-100'
-            }`}
+            className={`py-2.5 text-xs font-semibold tracking-wider uppercase transition cursor-pointer ${role === 'admin' ? 'bg-[#f3f1ed] text-[#090705] shadow' : 'opacity-60 hover:opacity-100'
+              }`}
           >
-             Admin
+            Admin
           </button>
         </div>
 
@@ -161,7 +159,9 @@ export default function RegisterPage(): React.JSX.Element {
               value={formData.email}
               onChange={handleInputChange}
               required
-              placeholder="nama@maisondor.com"
+              pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+              title="Pendaftaran mutlak wajib menggunakan alamat email @gmail.com"
+              placeholder="nama@gmail.com"
               className="w-full bg-black/40 border border-white/[0.05] p-3 text-xs outline-none focus:border-brand-gold transition text-[#f3f1ed] placeholder:text-gray-700"
             />
           </div>
