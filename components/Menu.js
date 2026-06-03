@@ -115,7 +115,7 @@ export default function Menu() {
           </div>
           {searchQuery && (
             <p className="text-[10px] text-brand-goldDim/60 italic pt-1">
-              *Menampilkan hasil pencarian global dari server...
+              Menampilkan hasil pencarian untuk "<span className="text-brand-gold">{searchQuery}</span>"
             </p>
           )}
         </div>

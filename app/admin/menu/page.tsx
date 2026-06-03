@@ -336,13 +336,13 @@ export default function MenuCrudPage(): React.JSX.Element {
                     menuList.map((item) => (
                       <tr key={item.id} className="hover:bg-white/[0.01] transition">
 
-                        {/* BARU: Merender Kotak Gambar Thumbnail Mini Menu (Sudah Fix Super Gelap) */}
+                        {/* Merender Kotak Gambar Thumbnail Mini Menu */}
                         <td className="p-4 vertical-middle">
-                          {/* 1. Ditambahkan class 'group' agar efek hover anak komponennya aktif */}
+                          {/* class 'group' agar efek hover anak komponennya aktif */}
                           <div className="w-12 h-12 bg-black/40 border border-white/10 overflow-hidden relative flex items-center justify-center group">
                             {item.image ? (
                               <>
-                                {/* 2. Ditambahkan tanda seru (!) pada !brightness-50 untuk memaksa gambar meredup */}
+                                {/*!brightness-50 */}
                                 <img
                                   src={item.image}
                                   alt={item.name}
@@ -351,7 +351,7 @@ export default function MenuCrudPage(): React.JSX.Element {
                                     e.currentTarget.src = 'https://placehold.co/100x100/120f0b/f3f1ed?text=No+Img';
                                   }}
                                 />
-                                {/* 3. Ditambahkan lapisan bayangan hitam absolut di atas gambar sebagai pengunci kegelapan */}
+                                {/* dark overlay */}
                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-500 pointer-events-none" />
                               </>
                             ) : (
